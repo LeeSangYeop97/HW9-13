@@ -1,0 +1,157 @@
+//메인
+void setup() {
+  size(800, 600);
+  a= new bonobono[5];
+  bb=new snow[5];
+  for (int i=0; i<5; i++) {
+    a[i] = new bonobono((float)random(1, 2));
+    bb[i] = new snow();
+  }
+}
+void draw() {
+  background(255);
+  for (int i=0; i<5; i++) {
+        for (int j=0; j<5; j++) {
+      a[i].collide(bb[j]);
+    }
+    for (int m=0; m<5; m++) {
+        for (int n=m+1; n<5; n++) {
+          a[m].collide(a[n]);
+          bb[m].collide(bb[n]);
+    }
+  }
+    a[i].display();
+    a[i].yup();
+    bb[i].snowman();
+    bb[i].move();
+  }
+}
+
+
+// 보노보노
+class bonobono {
+  bonobono() {
+    x = random(width);
+    y = random(height);
+    d = 10;
+    vx=random(3, 4);
+    vy=random(-3, -1);
+   
+  }
+  bonobono(float ii) {
+    x = random(width);
+    y = random(height);
+    d = ii;
+    vx=random(3, 4);
+    vy=random(-3, -1);
+    
+  }
+  
+  float x, y, d, vx, vy;
+  void yup() {
+    x+=vx;
+    y+=vy;
+    if (x>width ||x<0) vx=-vx;
+    if (y>height ||y<0) vy=-vy;
+  }
+  
+  void display() {
+    fill(100, 149, 237);
+    circle(x, y, d * 50); // 얼굴
+    fill(0);
+    circle(x + 20 * d, y - 5 * d, 2 * d); // 눈
+    circle(x - 20 * d, y - 5 * d, 2 * d); // 눈
+    fill(225);
+    circle(x - 4.5 * d, y + 5 * d, 10 * d); // 코 아래
+    circle(x + 4.5 * d, y + 5 * d, 10 * d);
+    fill(0);
+    circle(x, y, 7 * d); // 코
+    line(x - 4.5 * d, y + 2.5 * d, x - 9.5 * d, y); // 위
+    line(x - 4.5 * d, y + 5 * d, x - 12 * d, y + 5 * d); // 왼쪽 콧수염 중간
+    line(x - 4.5 * d, y + 7.5 * d, x - 9.5 * d, y + 10 * d); // 아래
+    line(x + 5.5 * d, y + 2.5 * d, x + 10.5 * d, y); // 위
+    line(x + 5.5 * d, y + 5 * d, x + 13 * d, y + 5 * d); // 오른쪽 콧수염 중간
+    line(x + 5.5 * d, y + 7.5 * d, x + 10.5 * d, y + 10 * d); // 아래
+  }
+  
+  void collide(snow b) {
+    float dd;
+    dd = sqrt((x-b.x)*(x-b.x) + (y-b.y)*(y-b.y));
+    if (dd < (50*d+8*b.d)/2) {
+      vx = -vx;
+      vy=-vy;
+      b.vx =- b.vx;
+      b.vy =- b.vy;
+    }
+  }
+  
+   void collide(bonobono b) {
+    float dd;
+    dd = sqrt((x-b.x)*(x-b.x) + (y-b.y)*(y-b.y));
+    if (dd < (50*d+50*b.d)/2) {
+      vx = -vx;
+      vy=-vy;
+      b.vx =- b.vx;
+      b.vy =- b.vy;
+    }
+  }
+}
+
+
+// 눈사람
+class snow {
+  float x, y, d, vx, vy;
+  snow() {
+    x = random(width);
+    y = random(height);
+    d = random(5, 7);
+    vx=random(3, 4);
+    vy=random(-3, -1);
+  }
+  snow(float a, float b, float c) {
+    x = b;
+    y = c;
+    d = a;
+    vx=random(3, 4);
+    vy=random(-3, -1);
+  }
+
+  void snowman() {
+    strokeWeight(d / 4);
+    fill(0);
+    rect(x - 2 * d, y - 6 * d, 4 * d, 3 * d);
+    rect(x - 3 * d, y - 3 * d, 6 * d, d / 2);
+    fill(255);
+    stroke(255, 0, 0);
+    rect(x - 2 * d, y - 4 * d, 4 * d, d / 4);
+    stroke(0);
+    strokeWeight(0.05 * d);
+    
+    strokeWeight(0.05 * d);
+    circle(x, y, 6 * d);
+    strokeWeight(d / 2);
+    point(x - d, y - d);
+    point(x + d, y - d);
+    stroke(255, 127, 0);
+    point(x, y);
+    stroke(0);
+    strokeWeight(0.05 * d);
+  }
+
+  void move() {
+    x+=vx;
+    y+=vy;
+    if (x>width ||x<0) vx=-vx;
+    if (y>height ||y<0) vy=-vy;
+  }
+   void collide(snow b) {
+    float dd;
+    dd = sqrt((x-b.x)*(x-b.x) + (y-b.y)*(y-b.y));
+    if (dd < (8*d + 8*b.d)/2) {
+      vx = -vx;
+      vy=-vy;
+      b.vx =- b.vx;
+      b.vy =- b.vy;
+    }
+  }
+}
